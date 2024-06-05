@@ -1,6 +1,6 @@
 import os
 
-from models import base_files, directories
+from projectify.models import base_files, directories
 
 
 def create_project_structure(project_name, python_version):

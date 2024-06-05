@@ -1,6 +1,6 @@
 import os
 
-from models import vscode_files
+from projectify.models import vscode_files
 
 
 def create_ide_configuration(project_name, ide_choice):
