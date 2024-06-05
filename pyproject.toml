@@ -1,3 +1,12 @@
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[flake8]
+exclude =
+    __init__.py
+max-line-length = 127
+ignore = E203, E501, W503
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

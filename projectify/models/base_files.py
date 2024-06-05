@@ -2,7 +2,7 @@ base_files = {
     "pyproject.toml": """[tool.ruff]
 line-length = 88
 indent-width = 4
-include = ["pyproject.toml", "src/**/*.py"]
+include = ["pyproject.toml", "**/*.py"]
 extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
