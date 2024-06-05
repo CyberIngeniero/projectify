@@ -8,7 +8,7 @@ version = "0.1.2"
 description = "A simple tool to create a Python project structure"
 readme = "README.md"
 authors = ["CyberIngeniero"]
-license = "MIT"
+license = { file = "LICENSE", text = "MIT" }
 url = "https://github.com/CyberIngeniero/projectify/actions"
 keywords = ["project", "structure", "python"]
 
