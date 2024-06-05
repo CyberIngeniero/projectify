@@ -1,0 +1,90 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Editor and IDE files
+.vscode/
+.idea/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Pyenv
+.python-version
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyInstaller
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+
+# Pyre
+.pyre/
+
+# Coverage reports
+htmlcov/
+.tox/
+.nox/
+
+# Environments
+.env
+.envrc
+.spyderproject
+.spyproject
+.ropeproject
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Testing
+.coverage
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/

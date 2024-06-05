@@ -1,7 +1,12 @@
 import sys
 
 from colorama import Fore, init
-from modules import get_installed_python_versions, print_header, setup_project
+
+from projectify.modules import (
+    get_installed_python_versions,
+    print_header,
+    setup_project,
+)
 
 init(autoreset=True)
 
