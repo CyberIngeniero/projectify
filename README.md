@@ -16,11 +16,29 @@ Proyectify is a command-line tool that generates and sets up a Python project st
 
 - Python 3.8 or higher.
 
+## Usage
+
+### Running the package
+
+To run the package and set up your project, use the following command:
+
+```python
+pip install projectify
+```
+
+### Interactive Options
+
+During script execution, you will be prompted for the following options:
+
+- **Project Name**: Enter the name of your new project.
+- **IDE Selection**: Select your favorite IDE (VScode, Pycharm, Other).
+- **Python Version**: Select the Python version to use. If only one version is installed, it will be used automatically.
+
 ## Dependency Installation
 
 ### Installing  `uv`
 
-To install `uv`, follow the instructions for your operating system:
+`uv` os installed automatically when running the package. If you want to install it manually, follow the instructions below.
 
 #### macOS and Linux
 
@@ -36,27 +54,13 @@ irm https://astral.sh/uv/install.ps1 | iex
 
 ### Installing  `make` (only on Windows)
 
-```sh
-choco install make
-```
-
-## Usage
-
-### Running the package
-
-To run the package and set up your project, use the following command:
+`make` is required to run the Makefile commands. To install `make` on Windows, use the following command:
 
 ```sh
 choco install make
 ```
 
-### Interactive Options
-
-During script execution, you will be prompted for the following options:
-
-- **Project Name**: Enter the name of your new project.
-- **IDE Selection**: Select your favorite IDE (VScode, Pycharm, Other).
-- **Python Version**: Select the Python version to use. If only one version is installed, it will be used automatically.
+In Linux and macOS, `make` is installed by default.
 
 ## Project Structure
 
