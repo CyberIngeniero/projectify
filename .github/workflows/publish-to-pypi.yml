@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/project/<project-name>/  # Reemplaza <project-name> con el nombre de tu proyecto
+      url: https://test.pypi.org/project/projectify/
     permissions:
       id-token: write  # Obligatorio para la publicación de confianza
     steps:
@@ -56,7 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/<project-name>/  # Reemplaza <project-name> con el nombre de tu proyecto
+      url: https://pypi.org/project/projectify/  # Reemplaza <project-name> con el nombre de tu proyecto
     permissions:
       id-token: write  # Obligatorio para la publicación de confianza
     steps:
