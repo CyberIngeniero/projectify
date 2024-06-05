@@ -50,6 +50,12 @@ def install_uv():
             ["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"], shell=True
         )
     elif os_name == "Windows":
+        print(Fore.RED + "uv no está instalado. Instalando uv...")
+        print(
+            Fore.YELLOW
+            + "PowerShell requiere una política de ejecución en [Unrestricted, RemoteSigned, ByPass] para ejecutar uv. Por ejemplo, para establecer la política de ejecución en 'RemoteSigned', ejecute:"
+        )
+        print(Fore.YELLOW + "Set-ExecutionPolicy RemoteSigned -scope CurrentUser")
         subprocess.run(
             ["powershell", "-c", "irm https://astral.sh/uv/install.ps1 | iex"],
             shell=True,
@@ -124,7 +130,18 @@ def install_tool(tool):
     elif os_name == "Darwin":
         subprocess.run(["brew", "install", tool])
     elif os_name == "Windows":
-        subprocess.run(["brew", "install", tool])
+        if tool == "make":
+            print(Fore.RED + "make no está instalado.")
+            print(
+                Fore.YELLOW
+                + "Instálelo desde PowerShell con permisos de administrador: choco install make"
+            )
+        else:
+            print(Fore.RED + f"{tool} no está instalado.")
+            print(
+                Fore.YELLOW
+                + f"Instálelo desde PowerShell con permisos de administrador: choco install {tool}"
+            )
     else:
         print(
             Fore.RED
