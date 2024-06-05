@@ -4,8 +4,14 @@ import sys
 
 from colorama import Fore
 
-from .dependencies import install_packages, install_tool, is_tool_installed
-from .environment import create_virtual_environment, install_uv, is_uv_installed
+from .dependencies import (
+    install_packages,
+    install_tool,
+    install_uv,
+    is_tool_installed,
+    is_uv_installed,
+)
+from .environment import create_virtual_environment
 from .git_repository import initialize_git_repo
 from .ide_configuration import create_ide_configuration
 from .project_structure import create_project_structure

@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "setup_proyect=projectify.core:main",
+            "projectify=projectify.core:main",
         ],
     },
     classifiers=[
