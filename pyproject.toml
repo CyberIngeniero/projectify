@@ -32,6 +32,9 @@ classifiers = [
 Repository = "https://github.com/CyberIngeniero/projectify"
 Documentation = "https://github.com/CyberIngeniero/projectify"
 
+[project.scripts]
+projectify = "projectify.core:main"
+
 [tool.flake8]
 exclude = "__init__.py"
 max-line-length = 127
