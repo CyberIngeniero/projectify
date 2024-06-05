@@ -3,7 +3,14 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
+name = "projectify"
 version = "0.1.2"
+description = "A simple tool to create a Python project structure"
+readme = "README.md"
+authors = ["CyberIngeniero"]
+license = "MIT"
+url = "https://github.com/CyberIngeniero/projectify/actions"
+keywords = ["project", "structure", "python"]
 
 [tool.flake8]
 exclude = "__init__.py"
