@@ -2,6 +2,9 @@
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+version = "0.1.1"
+
 [tool.flake8]
 exclude = "__init__.py"
 max-line-length = 127
