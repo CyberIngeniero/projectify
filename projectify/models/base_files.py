@@ -2,12 +2,12 @@ base_files = {
     "pyproject.toml": """[tool.ruff]
 line-length = 88
 indent-width = 4
-include = ["pyproject.toml", "**/*.py"]
+include = ["pyproject.toml"]
 extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]
-ignore = []
+ignore = [__init__.py]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
@@ -155,5 +155,42 @@ if __name__ == "__main__":
     for folder in folders_to_process:
         if os.path.exists(folder):
             generate_docs_for_folder(folder)
+""",
+    "requirements.txt": "",
+    "pytest.ini": """[pytest]
+testpaths =
+    tests
+addopts = -v -ra -q
+log_cli=true
+log_level=DEBUG
+log_format = %(asctime)s %(levelname)s %(message)s
+log_date_format = %Y-%m-%d %H:%M:%S
+log_file = logs/pytest-logs.txt
+log_file_level = INFO
+filterwarnings = ignore
+""",
+    "tests/__init__.py": "",
+    "tests/test.py": """# you can import your modules and test them here
+import pytest
+
+@pytest.fixture
+def sample_data():
+    return [1, 2, 3, 4]
+
+def test_addition():
+    assert 1 + 1 == 2
+
+def test_subtraction():
+    assert 2 - 1 == 1
+
+def test_sum(sample_data):
+    assert sum(sample_data) == 10
+
+class TestMathOperations:
+    def test_multiplication(self):
+        assert 2 * 2 == 4
+
+    def test_division(self):
+        assert 4 / 2 == 2
 """,
 }

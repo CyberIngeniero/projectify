@@ -6,6 +6,8 @@ import sys
 from colorama import Fore
 from packaging import version
 
+from .dependencies import ensure_uv_installed
+
 
 def get_installed_python_versions():
     """
@@ -18,7 +20,7 @@ def get_installed_python_versions():
         Each version is a string in the format 'major.minor.patch'.
         If no Python versions are found, an empty list is returned.
     """
-    versions = []
+    versions = set()
     try:
         if platform.system() == "Windows":
             result = subprocess.run(
@@ -26,9 +28,7 @@ def get_installed_python_versions():
             )
             output = result.stdout.decode("utf-8")
             matches = re.findall(r" -V:(\d+\.\d+)", output)
-            versions = sorted(
-                set(matches), key=lambda v: version.parse(v), reverse=True
-            )
+            versions.update(matches)
         else:
             possible_commands = ["python3", "python"]
             for cmd in possible_commands:
@@ -41,11 +41,11 @@ def get_installed_python_versions():
                 )
                 match = re.search(r"(\d+\.\d+\.\d+)", output)
                 if match:
-                    versions.append(match.group(1))
+                    versions.add(match.group(1))
     except FileNotFoundError:
         pass
 
-    return versions
+    return sorted(versions, key=lambda v: version.parse(v), reverse=True)
 
 
 def create_virtual_environment(project_name, python_version):
@@ -59,6 +59,9 @@ def create_virtual_environment(project_name, python_version):
     python_version : str
         The desired Python version for the virtual environment.
     """
+    # check if uv is installed
+    ensure_uv_installed()
+
     result = subprocess.run(
         ["uv", "venv", f"--python=python{python_version}"],
         cwd=project_name,

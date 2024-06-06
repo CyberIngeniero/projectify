@@ -15,6 +15,7 @@ Proyectify is a command-line tool that generates and sets up a Python project st
 ## Prerequisites
 
 - Python 3.8 or higher.
+- In macOS, DevsTools must be installed.
 
 ## Usage
 

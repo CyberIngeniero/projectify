@@ -100,7 +100,9 @@ def setup_project(project_name, python_version, ide_choice):
     # Instalando dependencias
     separator()
     print(Fore.CYAN + "Instalando paquetes necesarios...")
-    install_packages(project_name, ["ruff", "pre-commit", "mkdocs", "mkdocstrings"])
+    install_packages(
+        project_name, ["ruff", "pre-commit", "mkdocs", "mkdocstrings", "pytest"]
+    )
 
     # Configurando IDE
     separator()

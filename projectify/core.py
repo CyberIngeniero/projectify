@@ -1,14 +1,19 @@
+import argparse
+import importlib.metadata
+import os
+import platform
+import shutil
+import subprocess
 import sys
 
-from colorama import Fore, init
+from colorama import Fore
 
 from projectify.modules import (
+    check_and_install_dependencies,
     get_installed_python_versions,
     print_header,
     setup_project,
 )
-
-init(autoreset=True)
 
 
 def get_int_input(prompt, min_val, max_val):
@@ -34,10 +39,100 @@ def get_int_input(prompt, min_val, max_val):
             )
 
 
-def main():
-    """The main function that runs the project setup script."""
+def clean_project():
+    """
+    This function cleans the files and directories generated during the project setup process.
+    It deletes the "dist", "build" directories and any directory that ends with ".egg-info".
+    """
+    print(Fore.CYAN + "Limpiando archivos generados...")
+    folders_to_clean = ["dist", "build"]
+
+    # Eliminar carpetas específicas
+    for folder in folders_to_clean:
+        if os.path.exists(folder):
+            shutil.rmtree(folder)
+            print(Fore.GREEN + f"Directorio '{folder}' eliminado exitosamente.")
+
+    # Eliminar directorios que terminan en .egg-info
+    for item in os.listdir("."):
+        if item.endswith(".egg-info") and os.path.isdir(item):
+            shutil.rmtree(item)
+            print(Fore.GREEN + f"Directorio '{item}' eliminado exitosamente.")
+
+    print(Fore.GREEN + "Archivos limpiados exitosamente.")
+
+
+def install_dependencies():
+    """
+    This function installs the dependencies listed in the requirements.txt file
+    using 'uv' inside a virtual environment if it exists.
+    """
+    print(Fore.CYAN + "Instalando dependencias...")
+
+    venv_path = os.path.join(os.getcwd(), ".venv")
+    if os.path.exists(venv_path):
+        print(
+            Fore.GREEN
+            + "Entorno virtual encontrado. Instalando dependencias en el entorno virtual."
+        )
+        uv_executable = os.path.join(
+            venv_path,
+            "bin",
+            "uv" if platform.system() != "Windows" else "Scripts\\uv.exe",
+        )
+        if os.path.exists(uv_executable):
+            subprocess.check_call(
+                [uv_executable, "pip", "install", "-r", "requirements.txt"]
+            )
+            print(Fore.GREEN + "Dependencias instaladas exitosamente.")
+        else:
+            print(
+                Fore.RED + "No se encontró el ejecutable de 'uv' en el entorno virtual."
+            )
+            sys.exit(1)
+    else:
+        print(
+            Fore.RED
+            + "No se encontró un entorno virtual. Por favor, cree un entorno virtual primero."
+        )
+        sys.exit(1)
+
+
+def run_tests():
+    """
+    This function runs the tests using 'pytest' if the 'tests' folder
+    and the test configuration file exist.
+    """
+    print(Fore.CYAN + "Ejecutando pruebas...")
+
+    tests_path = os.path.join(os.getcwd(), "tests")
+    pytest_ini_path = os.path.join(os.getcwd(), "pytest.ini")
+
+    if os.path.exists(tests_path) and os.path.isdir(tests_path):
+        if os.path.exists(pytest_ini_path):
+            subprocess.run(["pytest"])
+            print(Fore.GREEN + "Pruebas ejecutadas exitosamente.")
+        else:
+            print(
+                Fore.RED
+                + "No se encontró el archivo de configuración de pruebas 'pytest.ini'."
+            )
+    else:
+        print(Fore.RED + "No se encontró la carpeta 'tests'.")
+
+
+def Init():
+    """
+    This function is the entry point for the project setup process.
+    It prints the header, checks and installs dependencies, and then sets up
+    the project based on user input.
+    """
     try:
+        # Print the header
         print_header()
+
+        # check and install dependencies
+        check_and_install_dependencies()
 
         project_name = input(Fore.CYAN + "Ingrese el nombre del proyecto: ")
 
@@ -77,6 +172,43 @@ def main():
         setup_project(project_name, python_version, ide_choice)
     except KeyboardInterrupt:
         print(Fore.RED + "\nProceso interrumpido por el usuario. Saliendo...")
+
+
+def main():
+    """
+    The main function that runs the project setup script.
+    """
+    parser = argparse.ArgumentParser(
+        description="Proyectify: Una herramienta para configurar estructuras de proyectos en Python"
+    )
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="version",
+        version=f"Proyectify {importlib.metadata.version('projectify')}",
+    )
+
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("init", help="Crear un nuevo proyecto")
+    subparsers.add_parser("clean", help="Limpiar archivos generados")
+    subparsers.add_parser("install-dependencies", help="Instalar dependencias")
+    subparsers.add_parser("run-tests", help="Ejecutar pruebas")
+    subparsers.add_parser("lint", help="Ejecutar linter")
+    subparsers.add_parser("format", help="Formatear código")
+    subparsers.add_parser("generate-docs", help="Generar documentación")
+
+    args = parser.parse_args()
+
+    if args.command == "init":
+        Init()
+    elif args.command == "clean":
+        clean_project()
+
+    elif args.command == "install-dependencies":
+        install_dependencies()
+
+    elif args.command == "run-tests":
+        run_tests()
 
 
 if __name__ == "__main__":

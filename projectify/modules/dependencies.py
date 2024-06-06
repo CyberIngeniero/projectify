@@ -21,51 +21,82 @@ def is_uv_installed():
             True if 'uv' is installed, False otherwise.
     """
     try:
-        subprocess.run(
+        result = subprocess.run(
             ["uv", "--version"],
             check=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        return True
-    except subprocess.CalledProcessError:
-        return False
-    except FileNotFoundError:
+        return result.returncode == 0
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
 
 def install_uv():
     """
-    This function is used to install 'uv' tool based on the operating system.
+    This function is used to install the 'uv' tool based on the operating system.
 
-    If the operating system is Linux or MacOS, it uses 'curl' to download and install 'uv' from the provided URL.
-    If the operating system is Windows, it uses 'powershell' to download and install 'uv' from the provided URL.
+    If the operating system is Linux or macOS, it first checks if 'brew' is installed and uses it to install 'uv'.
+    If 'brew' is not available, it falls back to using 'curl'.
+    If the operating system is Windows, it sets the execution policy to RemoteSigned and installs 'uv' using PowerShell.
     If the operating system is not supported, it prints an error message and exits the program.
 
     After the installation, it adds the installation path to the system's PATH environment variable.
     """
     os_name = platform.system()
-    if os_name == "Linux" or os_name == "Darwin":  # macOS is 'Darwin'
+    if os_name == "Linux":
+        print(Fore.YELLOW + "Installing uv with curl...")
         subprocess.run(
-            ["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"], shell=True
+            ["curl", "-LsSf", "https://astral.sh/uv/install.sh | sh"], shell=True
         )
+    elif os_name == "Darwin":  # macOS is 'Darwin'
+        try:
+            # Check if brew is installed
+            subprocess.run(
+                ["brew", "--version"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+            print(Fore.GREEN + "Brew is installed. Installing uv with brew...")
+            subprocess.run(["brew", "install", "uv"], check=True)
+        except subprocess.CalledProcessError:
+            print(Fore.YELLOW + "Brew is not installed. Installing uv with curl...")
+            subprocess.run(
+                ["curl", "-LsSf", "https://astral.sh/uv/install.sh | sh"], shell=True
+            )
     elif os_name == "Windows":
-        print(Fore.RED + "uv no está instalado. Instalando uv...")
-        print(
-            Fore.YELLOW
-            + "PowerShell requiere una política de ejecución en [Unrestricted, RemoteSigned, ByPass] para ejecutar uv. Por ejemplo, para establecer la política de ejecución en 'RemoteSigned', ejecute:"
-        )
-        print(Fore.YELLOW + "Set-ExecutionPolicy RemoteSigned -scope CurrentUser")
-        subprocess.run(
-            ["powershell", "-c", "irm https://astral.sh/uv/install.ps1 | iex"],
-            shell=True,
-        )
+        try:
+            print(
+                Fore.YELLOW + "Setting PowerShell execution policy to RemoteSigned..."
+            )
+            subprocess.run(
+                [
+                    "powershell",
+                    "-Command",
+                    "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force",
+                ],
+                check=True,
+            )
+            print(Fore.GREEN + "Execution policy set. Installing uv with PowerShell...")
+            subprocess.run(
+                ["powershell", "-c", "irm https://astral.sh/uv/install.ps1 | iex"],
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            print(
+                Fore.RED
+                + "No se pudo configurar la política de ejecución de PowerShell. "
+                "Por favor, configúrela manualmente y vuelva a intentar."
+            )
+            sys.exit(1)
     else:
         print(
             Fore.RED
             + f"Sistema operativo {os_name} no soportado para la instalación automática de uv."
         )
         sys.exit(1)
+
     # Añadir la ruta de instalación al PATH
     os.environ["PATH"] += os.pathsep + os.path.expanduser("~/.cargo/bin")
 
@@ -100,6 +131,25 @@ def is_tool_installed(tool):
         return False
     except FileNotFoundError:
         return False
+
+
+def ensure_uv_installed():
+    """
+    Verify if iv is installed in your systems.
+    """
+    if not is_uv_installed():
+        print(Fore.YELLOW + "uv no está instalado. Instalando uv...")
+        install_uv()
+        if not is_uv_installed():
+            print(
+                Fore.RED + "No se pudo instalar uv automáticamente. "
+                "Por favor, instálelo manualmente y vuelva a intentar."
+            )
+            sys.exit(1)
+        else:
+            print(Fore.GREEN + "uv instalado correctamente.")
+    else:
+        print(Fore.GREEN + "uv ya está instalado.")
 
 
 def install_tool(tool):
@@ -174,3 +224,19 @@ def install_packages(project_name, packages):
     """
     for package in packages:
         subprocess.run(["uv", "pip", "install", package], cwd=project_name)
+
+
+def check_and_install_dependencies():
+    """
+    This function checks if the required packages are installed and installs them if necessary.
+    """
+    required_packages = ["colorama", "art", "packaging"]
+    for package in required_packages:
+        try:
+            __import__(package)
+        except ImportError:
+            print(
+                Fore.YELLOW
+                + f"El paquete '{package}' no está instalado. Instalándolo..."
+            )
+            subprocess.check_call([sys.executable, "-m", "pip", "install", package])

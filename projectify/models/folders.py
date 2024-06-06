@@ -8,4 +8,6 @@ directories = [
     "artifacts",
     "docs",
     "scripts",
+    "tests",
+    "logs",
 ]
