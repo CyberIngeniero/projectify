@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="Projectify",
-    version="0.1.6",
+    version="0.1.7",
     description="A tool to set up a Python project structure",
     author="CyberIngeniero",
     author_email="npinoa.ai@gmail.com",
