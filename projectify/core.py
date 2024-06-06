@@ -1,7 +1,9 @@
 import argparse
+import glob
 import importlib.metadata
 import os
 import platform
+import shutil
 import subprocess
 import sys
 
@@ -40,22 +42,52 @@ def get_int_input(prompt, min_val, max_val):
 
 def clean_project():
     """
-    This function cleans the files and directories generated during the project setup process.
-    It deletes the "dist", "build" directories and any directory that ends with ".egg-info".
+    This function cleans up generated directories.
     """
     print(Fore.CYAN + "Limpiando archivos generados...")
-    directories = ["build", "dist", ".egg-info"]
 
-    for directory in directories:
-        if os.path.exists(directory):
+    directories_to_remove = ["dist", "build", "*.egg-info"]
+
+    for directory in directories_to_remove:
+        full_path = os.path.join(os.getcwd(), directory)
+        if os.path.isdir(full_path):
             try:
-                subprocess.run(["rm", "-rf", directory], check=True)
-                print(f"Directorio {directory} eliminado correctamente.")
-            except subprocess.CalledProcessError as e:
-                print(f"Error al eliminar el directorio {directory}: {e}")
+                shutil.rmtree(full_path)
+                print(Fore.GREEN + f"Directorio {directory} eliminado exitosamente.")
+            except Exception as e:
+                print(Fore.RED + f"Error al eliminar {directory}: {e}")
+        elif os.path.isfile(full_path) or os.path.islink(full_path):
+            try:
+                os.remove(full_path)
+                print(Fore.GREEN + f"Archivo {directory} eliminado exitosamente.")
+            except Exception as e:
+                print(Fore.RED + f"Error al eliminar {directory}: {e}")
         else:
-            print(f"El directorio {directory} no existe.")
-    print("Limpieza completa.")
+            # En caso de que sea un patrón, como "*.egg-info"
+            for file_or_dir in glob.glob(full_path):
+                if os.path.isdir(file_or_dir):
+                    try:
+                        shutil.rmtree(file_or_dir)
+                        print(
+                            Fore.GREEN
+                            + f"Directorio {file_or_dir} eliminado exitosamente."
+                        )
+                    except Exception as e:
+                        print(Fore.RED + f"Error al eliminar {file_or_dir}: {e}")
+                elif os.path.isfile(file_or_dir) or os.path.islink(file_or_dir):
+                    try:
+                        os.remove(file_or_dir)
+                        print(
+                            Fore.GREEN
+                            + f"Archivo {file_or_dir} eliminado exitosamente."
+                        )
+                    except Exception as e:
+                        print(Fore.RED + f"Error al eliminar {file_or_dir}: {e}")
+                else:
+                    print(
+                        Fore.YELLOW
+                        + f"{file_or_dir} no existe o no es un directorio/archivo válido."
+                    )
 
 
 def install_dependencies():
@@ -244,39 +276,47 @@ def main():
     )
 
     subparsers = parser.add_subparsers(dest="command")
-    subparsers.add_parser("init", help="Crear un nuevo proyecto")
-    subparsers.add_parser("i", help="Alias para crear un nuevo proyecto")
-    subparsers.add_parser("clean", help="Limpiar archivos generados")
-    subparsers.add_parser("c", help="Alias para limpiar archivos generados")
-    subparsers.add_parser("install-dependencies", help="Instalar dependencias")
-    subparsers.add_parser("id", help="Alias para instalar dependencias")
-    subparsers.add_parser("run-tests", help="Ejecutar pruebas")
-    subparsers.add_parser("rt", help="Alias para ejecutar pruebas")
-    subparsers.add_parser("lint", help="Ejecutar linter")
-    subparsers.add_parser("l", help="Alias para ejecutar linter")
-    subparsers.add_parser("format", help="Formatear código")
-    subparsers.add_parser("f", help="Alias para formatear código")
-    subparsers.add_parser("generate-docs", help="Generar documentación")
-    subparsers.add_parser("g", help="Alias para generar documentación")
+
+    init_parser = subparsers.add_parser(
+        "init", aliases=["i"], help="Crear un nuevo proyecto"
+    )
+    init_parser.set_defaults(func=Init)
+
+    clean_parser = subparsers.add_parser(
+        "clean", aliases=["c"], help="Limpiar archivos generados"
+    )
+    clean_parser.set_defaults(func=clean_project)
+
+    install_dependencies_parser = subparsers.add_parser(
+        "install-dependencies", aliases=["id"], help="Instalar dependencias"
+    )
+    install_dependencies_parser.set_defaults(func=install_dependencies)
+
+    run_tests_parser = subparsers.add_parser(
+        "run-tests", aliases=["t"], help="Ejecutar pruebas"
+    )
+    run_tests_parser.set_defaults(func=run_tests)
+
+    lint_parser = subparsers.add_parser("lint", aliases=["l"], help="Ejecutar linter")
+    lint_parser.set_defaults(func=run_linter)
+
+    format_parser = subparsers.add_parser(
+        "format", aliases=["f"], help="Formatear código"
+    )
+    format_parser.set_defaults(func=format_code)
+
+    generate_docs_parser = subparsers.add_parser(
+        "generate-docs", aliases=["g"], help="Generar documentación"
+    )
+    generate_docs_parser.set_defaults(func=generate_docs)
 
     args = parser.parse_args()
 
-    if args.command in ["init", "i"]:
-        setup_project()
-    elif args.command in ["clean", "c"]:
-        clean_project()
-    elif args.command in ["install-dependencies", "id"]:
-        install_dependencies()
-    elif args.command in ["run-tests", "rt"]:
-        run_tests()
-    elif args.command in ["lint", "l"]:
-        run_linter()
-    elif args.command in ["format", "f"]:
-        format_code()
-    elif args.command in ["generate-docs", "g"]:
-        generate_docs()
-    else:
+    if args.command is None:
         parser.print_help()
+        sys.exit(1)
+
+    args.func()
 
 
 if __name__ == "__main__":
