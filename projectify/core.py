@@ -78,15 +78,14 @@ def clean_project():
                     try:
                         os.remove(file_or_dir)
                         print(
-                            Fore.GREEN
-                            + f"Archivo {file_or_dir} eliminado exitosamente."
+                            Fore.GREEN + f"Archivo {directory} eliminado exitosamente."
                         )
                     except Exception as e:
-                        print(Fore.RED + f"Error al eliminar {file_or_dir}: {e}")
+                        print(Fore.RED + f"Error al eliminar {directory}: {e}")
                 else:
                     print(
                         Fore.YELLOW
-                        + f"{file_or_dir} no existe o no es un directorio/archivo válido."
+                        + f"{directory} no existe o no es un directorio/archivo válido."
                     )
 
 
