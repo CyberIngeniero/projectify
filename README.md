@@ -67,9 +67,13 @@ In Linux and macOS, `make` is installed by default.
 
 The package will generate the following folder structure:
 
-```markdown
+```sh
 <project_name>/
-│
+│── .venv/
+│── .vscode/
+│   └── keybindings.json
+│   └── settings.json
+│   └── snippets.json
 ├── app/
 │   └── main.py
 ├── artifacts/
@@ -80,10 +84,14 @@ The package will generate the following folder structure:
 ├── modules/
 │   └── __init__.py
 ├── notebooks/
+├── logs/
 ├── scripts/
 │   └── generate_docs.py
 ├── utils/
 │   └── __init__.py
+├── .tests/
+│   └── __init__.py
+│   └── test_example.py
 ├── .dockerignore
 ├── .env
 ├── .gitignore
