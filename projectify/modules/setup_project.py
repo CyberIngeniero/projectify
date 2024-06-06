@@ -2,7 +2,7 @@ import os
 import platform
 import sys
 
-from colorama import Fore
+from colorama import Fore, Style
 
 from .dependencies import (
     install_packages,
@@ -43,72 +43,72 @@ def setup_project(project_name, python_version, ide_choice):
     if os.path.exists(project_name):
         print(
             Fore.RED
-            + f"El directorio '{project_name}' ya existe. Por favor, elija otro nombre para el proyecto."
+            + f"El directorio '{project_name}' ya existe. Por favor, elija otro nombre para el proyecto." + Style.RESET_ALL
         )
         sys.exit(1)
 
     separator()
-    print(Fore.CYAN + "Creando estructura del proyecto...")
+    print(Fore.CYAN + "Creando estructura del proyecto..." + Style.RESET_ALL)
     create_project_structure(project_name, python_version)
 
     # Instalando uv
     separator()
     if not is_uv_installed():
-        print(Fore.YELLOW + "uv no está instalado. Instalando uv...")
+        print(Fore.YELLOW + "uv no está instalado. Instalando uv..." + Style.RESET_ALL)
         install_uv()
     else:
-        print(Fore.GREEN + "uv ya está instalado.")
+        print(Fore.GREEN + "uv ya está instalado." + Style.RESET_ALL)
 
     # Instalando git
     separator()
     if not is_tool_installed("git"):
-        print(Fore.YELLOW + "git no está instalado. Instalando git...")
+        print(Fore.YELLOW + "git no está instalado. Instalando git..." + Style.RESET_ALL)
         install_tool("git")
     else:
-        print(Fore.GREEN + "git ya está instalado.")
+        print(Fore.GREEN + "git ya está instalado." + Style.RESET_ALL)
 
     # Instalando make
     separator()
     if platform.system() == "Windows":
         if not is_tool_installed("make"):
-            print(Fore.RED + "make no está instalado.")
+            print(Fore.RED + "make no está instalado." + Style.RESET_ALL)
             install_tool("make")
             if not is_tool_installed("make"):
                 print(
                     Fore.YELLOW
-                    + "Instálelo desde PowerShell con permisos de administrador: choco install make"
+                    + "Instálelo desde PowerShell con permisos de administrador: choco install make" + Style.RESET_ALL
                 )
         else:
-            print(Fore.GREEN + "make ya está instalado.")
+            print(Fore.GREEN + "make ya está instalado." + Style.RESET_ALL)
     else:
         if not is_tool_installed("make"):
-            print(Fore.YELLOW + "make no está instalado. Instalando make...")
+            print(Fore.YELLOW + "make no está instalado. Instalando make..." + Style.RESET_ALL)
             install_tool("make")
         else:
-            print(Fore.GREEN + "make ya está instalado.")
+            print(Fore.GREEN + "make ya está instalado." + Style.RESET_ALL)
 
     # Creando entorno virtual
     separator()
-    print(Fore.CYAN + "Creando entorno virtual...")
+    print(Fore.CYAN + "Creando entorno virtual..." + Style.RESET_ALL)
     create_virtual_environment(project_name, python_version)
 
     # Inicializando repositorio Git
     separator()
-    print(Fore.CYAN + "Inicializando repositorio Git...")
+    print(Fore.CYAN + "Inicializando repositorio Git..." + Style.RESET_ALL)
     initialize_git_repo(project_name)
 
     # Instalando dependencias
     separator()
-    print(Fore.CYAN + "Instalando paquetes necesarios...")
+    print(Fore.CYAN + "Instalando paquetes necesarios..." + Style.RESET_ALL)
     install_packages(
         project_name, ["ruff", "pre-commit", "mkdocs", "mkdocstrings", "pytest"]
     )
 
     # Configurando IDE
     separator()
-    print(Fore.CYAN + "Configurando IDE seleccionado...")
+    print(Fore.CYAN + "Configurando IDE seleccionado..." + Style.RESET_ALL)
     create_ide_configuration(project_name, ide_choice)
 
     # Mensaje final
     separator()
-    print(Fore.CYAN + f"Proyecto {project_name} creado y configurado exitosamente.")
+    print(Fore.CYAN + f"Proyecto {project_name} creado y configurado exitosamente." + Style.RESET_ALL)

@@ -3,7 +3,7 @@ import platform
 import subprocess
 import sys
 
-from colorama import Fore
+from colorama import Fore, Style
 
 
 def is_uv_installed():
@@ -45,7 +45,7 @@ def install_uv():
     """
     os_name = platform.system()
     if os_name == "Linux":
-        print(Fore.YELLOW + "Installing uv with curl...")
+        print(Fore.YELLOW + "Installing uv with curl..." + Style.RESET_ALL)
         subprocess.run(
             ["curl", "-LsSf", "https://astral.sh/uv/install.sh | sh"], shell=True
         )
@@ -58,10 +58,10 @@ def install_uv():
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
             )
-            print(Fore.GREEN + "Brew is installed. Installing uv with brew...")
+            print(Fore.GREEN + "Brew is installed. Installing uv with brew..." + Style.RESET_ALL)
             subprocess.run(["brew", "install", "uv"], check=True)
         except subprocess.CalledProcessError:
-            print(Fore.YELLOW + "Brew is not installed. Installing uv with curl...")
+            print(Fore.YELLOW + "Brew is not installed. Installing uv with curl..." + Style.RESET_ALL)
             subprocess.run(
                 ["curl", "-LsSf", "https://astral.sh/uv/install.sh | sh"], shell=True
             )
@@ -69,6 +69,7 @@ def install_uv():
         try:
             print(
                 Fore.YELLOW + "Setting PowerShell execution policy to RemoteSigned..."
+                + Style.RESET_ALL
             )
             subprocess.run(
                 [
@@ -78,7 +79,10 @@ def install_uv():
                 ],
                 check=True,
             )
-            print(Fore.GREEN + "Execution policy set. Installing uv with PowerShell...")
+            print(
+                Fore.GREEN +
+                "Execution policy set. Installing uv with PowerShell..." +
+                Style.RESET_ALL)
             subprocess.run(
                 ["powershell", "-c", "irm https://astral.sh/uv/install.ps1 | iex"],
                 check=True,
@@ -87,13 +91,13 @@ def install_uv():
             print(
                 Fore.RED
                 + "No se pudo configurar la política de ejecución de PowerShell. "
-                "Por favor, configúrela manualmente y vuelva a intentar."
+                "Por favor, configúrela manualmente y vuelva a intentar."  + Style.RESET_ALL
             )
             sys.exit(1)
     else:
         print(
             Fore.RED
-            + f"Sistema operativo {os_name} no soportado para la instalación automática de uv."
+            + f"Sistema operativo {os_name} no soportado para la instalación automática de uv." + Style.RESET_ALL
         )
         sys.exit(1)
 
@@ -138,18 +142,18 @@ def ensure_uv_installed():
     Verify if iv is installed in your systems.
     """
     if not is_uv_installed():
-        print(Fore.YELLOW + "uv no está instalado. Instalando uv...")
+        print(Fore.YELLOW + "uv no está instalado. Instalando uv..." + Style.RESET_ALL)
         install_uv()
         if not is_uv_installed():
             print(
                 Fore.RED + "No se pudo instalar uv automáticamente. "
-                "Por favor, instálelo manualmente y vuelva a intentar."
+                "Por favor, instálelo manualmente y vuelva a intentar." + Style.RESET_ALL
             )
             sys.exit(1)
         else:
-            print(Fore.GREEN + "uv instalado correctamente.")
+            print(Fore.GREEN + "uv instalado correctamente." + Style.RESET_ALL)
     else:
-        print(Fore.GREEN + "uv ya está instalado.")
+        print(Fore.GREEN + "uv ya está instalado." + Style.RESET_ALL)
 
 
 def install_tool(tool):
@@ -181,27 +185,27 @@ def install_tool(tool):
         subprocess.run(["brew", "install", tool])
     elif os_name == "Windows":
         if tool == "make":
-            print(Fore.RED + "make no está instalado.")
+            print(Fore.RED + "make no está instalado." + Style.RESET_ALL)
             print(
                 Fore.YELLOW
-                + "Instálelo desde PowerShell con permisos de administrador: choco install make"
+                + "Instálelo desde PowerShell con permisos de administrador: choco install make" + Style.RESET_ALL
             )
         else:
             print(Fore.RED + f"{tool} no está instalado.")
             print(
                 Fore.YELLOW
-                + f"Instálelo desde PowerShell con permisos de administrador: choco install {tool}"
+                + f"Instálelo desde PowerShell con permisos de administrador: choco install {tool}" + Style.RESET_ALL
             )
     else:
         print(
             Fore.RED
-            + f"Sistema operativo {os_name} no soportado para la instalación automática de {tool}."
+            + f"Sistema operativo {os_name} no soportado para la instalación automática de {tool}." + Style.RESET_ALL
         )
         sys.exit(1)
     if is_tool_installed(tool):
-        print(Fore.GREEN + f"{tool} instalado correctamente.")
+        print(Fore.GREEN + f"{tool} instalado correctamente." + Style.RESET_ALL)
     else:
-        print(Fore.RED + f"Error al instalar {tool}. Por favor, instálelo manualmente.")
+        print(Fore.RED + f"Error al instalar {tool}. Por favor, instálelo manualmente." + Style.RESET_ALL)
 
 
 def install_packages(project_name, packages):
@@ -237,6 +241,6 @@ def check_and_install_dependencies():
         except ImportError:
             print(
                 Fore.YELLOW
-                + f"El paquete '{package}' no está instalado. Instalándolo..."
+                + f"El paquete '{package}' no está instalado. Instalándolo..." + Style.RESET_ALL
             )
             subprocess.check_call([sys.executable, "-m", "pip", "install", package])

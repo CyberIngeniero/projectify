@@ -3,7 +3,7 @@ import re
 import subprocess
 import sys
 
-from colorama import Fore
+from colorama import Fore, Style
 from packaging import version
 
 from .dependencies import ensure_uv_installed
@@ -72,10 +72,11 @@ def create_virtual_environment(project_name, python_version):
         print(
             Fore.RED
             + f"No se encontró el intérprete para Python {python_version}. Intentando encontrar la versión más cercana disponible..."
+             + Style.RESET_ALL
         )
         closest_version = find_closest_python_version(python_version)
         if closest_version:
-            print(Fore.YELLOW + f"Utilizando Python {closest_version} en su lugar.")
+            print(Fore.YELLOW + f"Utilizando Python {closest_version} en su lugar." + Style.RESET_ALL)
             subprocess.run(
                 ["uv", "venv", f"--python=python{closest_version}"], cwd=project_name
             )
@@ -83,6 +84,7 @@ def create_virtual_environment(project_name, python_version):
             print(
                 Fore.RED
                 + "No se pudo encontrar una versión de Python cercana. Por favor, elija otra versión."
+                 + Style.RESET_ALL
             )
             sys.exit(1)
 

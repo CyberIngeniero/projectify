@@ -7,7 +7,7 @@ import shutil
 import subprocess
 import sys
 
-from colorama import Fore
+from colorama import Fore, Style
 
 from projectify.modules import (
     check_and_install_dependencies,
@@ -36,7 +36,7 @@ def get_int_input(prompt, min_val, max_val):
             return value
         except ValueError:
             print(
-                Fore.RED + f"Por favor, ingrese un número entre {min_val} y {max_val}."
+                Fore.RED + f"Por favor, ingrese un número entre {min_val} y {max_val}." + Style.RESET_ALL
             )
 
 
@@ -44,7 +44,7 @@ def clean_project():
     """
     This function cleans up generated directories.
     """
-    print(Fore.CYAN + "Limpiando archivos generados...")
+    print(Fore.CYAN + "Limpiando archivos generados..." + Style.RESET_ALL)
 
     directories_to_remove = ["dist", "build", "*.egg-info"]
 
@@ -53,15 +53,15 @@ def clean_project():
         if os.path.isdir(full_path):
             try:
                 shutil.rmtree(full_path)
-                print(Fore.GREEN + f"Directorio {directory} eliminado exitosamente.")
+                print(Fore.GREEN + f"Directorio {directory} eliminado exitosamente." + Style.RESET_ALL)
             except Exception as e:
                 print(Fore.RED + f"Error al eliminar {directory}: {e}")
         elif os.path.isfile(full_path) or os.path.islink(full_path):
             try:
                 os.remove(full_path)
-                print(Fore.GREEN + f"Archivo {directory} eliminado exitosamente.")
+                print(Fore.GREEN + f"Archivo {directory} eliminado exitosamente." + Style.RESET_ALL)
             except Exception as e:
-                print(Fore.RED + f"Error al eliminar {directory}: {e}")
+                print(Fore.RED + f"Error al eliminar {directory}: {e}" + Style.RESET_ALL)
         else:
             # En caso de que sea un patrón, como "*.egg-info"
             for file_or_dir in glob.glob(full_path):
@@ -70,22 +70,22 @@ def clean_project():
                         shutil.rmtree(file_or_dir)
                         print(
                             Fore.GREEN
-                            + f"Directorio {file_or_dir} eliminado exitosamente."
+                            + f"Directorio {file_or_dir} eliminado exitosamente." + Style.RESET_ALL
                         )
                     except Exception as e:
-                        print(Fore.RED + f"Error al eliminar {file_or_dir}: {e}")
+                        print(Fore.RED + f"Error al eliminar {file_or_dir}: {e}" + Style.RESET_ALL)
                 elif os.path.isfile(file_or_dir) or os.path.islink(file_or_dir):
                     try:
                         os.remove(file_or_dir)
                         print(
-                            Fore.GREEN + f"Archivo {directory} eliminado exitosamente."
+                            Fore.GREEN + f"Archivo {directory} eliminado exitosamente." + Style.RESET_ALL
                         )
                     except Exception as e:
-                        print(Fore.RED + f"Error al eliminar {directory}: {e}")
+                        print(Fore.RED + f"Error al eliminar {directory}: {e}" + Style.RESET_ALL)
                 else:
                     print(
                         Fore.YELLOW
-                        + f"{directory} no existe o no es un directorio/archivo válido."
+                        + f"{directory} no existe o no es un directorio/archivo válido." + Style.RESET_ALL
                     )
 
 
@@ -94,7 +94,7 @@ def install_dependencies():
     This function installs the dependencies listed in the requirements.txt file
     using 'uv' inside a virtual environment if it exists.
     """
-    print(Fore.CYAN + "Instalando dependencias...")
+    print(Fore.CYAN + "Instalando dependencias..." + Style.RESET_ALL)
 
     venv_path = os.path.join(os.getcwd(), ".venv")
     requirements_file = "requirements.txt"
@@ -103,7 +103,7 @@ def install_dependencies():
     if os.path.exists(venv_path):
         print(
             Fore.GREEN
-            + "Entorno virtual encontrado. Instalando dependencias en el entorno virtual."
+            + "Entorno virtual encontrado. Instalando dependencias en el entorno virtual." + Style.RESET_ALL
         )
         uv_executable = os.path.join(
             venv_path,
@@ -118,25 +118,25 @@ def install_dependencies():
                         [uv_executable, "pip", "install", "-r", requirements_file]
                     )
                     subprocess.check_call([uv_executable, "pip", "install", "ruff"])
-                    print(Fore.GREEN + "Dependencias instaladas exitosamente.")
+                    print(Fore.GREEN + "Dependencias instaladas exitosamente." + Style.RESET_ALL)
                 except subprocess.CalledProcessError as e:
                     print(f"Error al instalar dependencias: {e}")
                     sys.exit(1)
             else:
                 print(
                     Fore.RED
-                    + "No se encontró el archivo requirements.txt. Por favor, asegúrese de que exista."
+                    + "No se encontró el archivo requirements.txt. Por favor, asegúrese de que exista." + Style.RESET_ALL
                 )
                 sys.exit(1)
         else:
             print(
-                Fore.RED + "No se encontró el ejecutable de 'uv' en el entorno virtual."
+                Fore.RED + "No se encontró el ejecutable de 'uv' en el entorno virtual." + Style.RESET_ALL
             )
             sys.exit(1)
     else:
         print(
             Fore.RED
-            + "No se encontró un entorno virtual. Por favor, cree un entorno virtual primero."
+            + "No se encontró un entorno virtual. Por favor, cree un entorno virtual primero." + Style.RESET_ALL
         )
         sys.exit(1)
 
@@ -146,7 +146,7 @@ def run_tests():
     This function runs the tests using 'pytest' if the 'tests' folder
     and the test configuration file exist.
     """
-    print(Fore.CYAN + "Ejecutando pruebas...")
+    print(Fore.CYAN + "Ejecutando pruebas..." + Style.RESET_ALL)
 
     tests_path = os.path.join(os.getcwd(), "tests")
     pytest_ini_path = os.path.join(os.getcwd(), "pytest.ini")
@@ -154,37 +154,37 @@ def run_tests():
     if os.path.exists(tests_path) and os.path.isdir(tests_path):
         if os.path.exists(pytest_ini_path):
             subprocess.run(["pytest"])
-            print(Fore.GREEN + "Pruebas ejecutadas exitosamente.")
+            print(Fore.GREEN + "Pruebas ejecutadas exitosamente." + Style.RESET_ALL)
         else:
             print(
                 Fore.RED
-                + "No se encontró el archivo de configuración de pruebas 'pytest.ini'."
+                + "No se encontró el archivo de configuración de pruebas 'pytest.ini'." + Style.RESET_ALL
             )
     else:
-        print(Fore.RED + "No se encontró la carpeta 'tests'.")
+        print(Fore.RED + "No se encontró la carpeta 'tests'." + Style.RESET_ALL)
 
 
 def run_linter():
     venv_path = ".venv"
     if not os.path.exists(venv_path):
         print(
-            "No se encontró un entorno virtual. Por favor, cree uno antes de ejecutar el linter."
+            "No se encontró un entorno virtual. Por favor, cree uno antes de ejecutar el linter." + Style.RESET_ALL
         )
         sys.exit(1)
 
     try:
         subprocess.run([os.path.join(venv_path, "bin", "ruff"), "."], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Error al ejecutar el linter: {e}")
+        print(f"Error al ejecutar el linter: {e}" + Style.RESET_ALL)
         sys.exit(1)
-    print("Linter ejecutado correctamente.")
+    print("Linter ejecutado correctamente." + Style.RESET_ALL)
 
 
 def format_code():
     venv_path = ".venv"
     if not os.path.exists(venv_path):
         print(
-            "No se encontró un entorno virtual. Por favor, cree uno antes de formatear el código."
+            "No se encontró un entorno virtual. Por favor, cree uno antes de formatear el código." + Style.RESET_ALL
         )
         sys.exit(1)
 
@@ -193,18 +193,18 @@ def format_code():
             [os.path.join(venv_path, "bin", "ruff"), "check", "--fix", "."], check=True
         )
     except subprocess.CalledProcessError as e:
-        print(f"Error al formatear el código: {e}")
+        print(f"Error al formatear el código: {e}" + Style.RESET_ALL)
         sys.exit(1)
-    print("Código formateado correctamente.")
+    print("Código formateado correctamente." + Style.RESET_ALL)
 
 
 def generate_docs():
     try:
         subprocess.run(["mkdocs", "build"], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"Error al generar la documentación: {e}")
+        print(f"Error al generar la documentación: {e}" + Style.RESET_ALL)
         sys.exit(1)
-    print("Documentación generada correctamente.")
+    print("Documentación generada correctamente." + Style.RESET_ALL)
 
 
 def Init():
@@ -220,12 +220,12 @@ def Init():
         # check and install dependencies
         check_and_install_dependencies()
 
-        project_name = input(Fore.CYAN + "Ingrese el nombre del proyecto: ")
+        project_name = input(Fore.CYAN + "Ingrese el nombre del proyecto: " + Style.RESET_ALL)
 
-        print(Fore.CYAN + "\nSeleccione su IDE:")
-        print(Fore.CYAN + "1. VScode")
-        print(Fore.CYAN + "2. Pycharm")
-        print(Fore.CYAN + "3. Other")
+        print(Fore.CYAN + "\nSeleccione su IDE:" + Style.RESET_ALL)
+        print(Fore.CYAN + "1. VScode" + Style.RESET_ALL)
+        print(Fore.CYAN + "2. Pycharm" + Style.RESET_ALL)
+        print(Fore.CYAN + "3. Other" + Style.RESET_ALL)
         ide_choice = get_int_input(
             Fore.CYAN + "Ingrese la opción de su IDE favorito: ", 1, 3
         )
@@ -234,14 +234,14 @@ def Init():
         if len(installed_versions) == 0:
             print(
                 Fore.RED
-                + "\nNo se encontró ninguna versión de Python instalada. Por favor, instale Python y vuelva a intentarlo."
+                + "\nNo se encontró ninguna versión de Python instalada. Por favor, instale Python y vuelva a intentarlo." + Style.RESET_ALL
             )
             sys.exit(1)
         elif len(installed_versions) == 1:
             python_version = installed_versions[0]
             print(
                 Fore.YELLOW
-                + f"\nSe encontró solo la versión de Python {python_version}. Creando venv con esta versión."
+                + f"\nSe encontró solo la versión de Python {python_version}. Creando venv con esta versión." + Style.RESET_ALL
             )
         else:
             print(Fore.CYAN + "\nSeleccione la versión de Python:")
@@ -257,7 +257,7 @@ def Init():
 
         setup_project(project_name, python_version, ide_choice)
     except KeyboardInterrupt:
-        print(Fore.RED + "\nProceso interrumpido por el usuario. Saliendo...")
+        print(Fore.RED + "\nProceso interrumpido por el usuario. Saliendo..." + Style.RESET_ALL)
 
 
 def main():
