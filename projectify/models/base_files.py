@@ -7,12 +7,12 @@ extend-include = ["*.ipynb"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]
-ignore = [__init__.py]
 fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.format]
+exclude = ["__init__.py"]
 quote-style = "single"
 skip-magic-trailing-comma = false
 line-ending = "auto"
@@ -29,6 +29,7 @@ data/
 .idea
 """,
     "README.md": """# {project_name}
+
 ## Description
 
 ## Installation
