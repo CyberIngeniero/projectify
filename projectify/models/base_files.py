@@ -11,6 +11,9 @@ fixable = ["ALL"]
 unfixable = []
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
 [tool.ruff.format]
 exclude = ["__init__.py"]
 quote-style = "single"
@@ -18,6 +21,18 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 docstring-code-format = true
 docstring-code-line-length = "dynamic"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v -ra -q"
+log_cli = true
+log_level = "DEBUG"
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_file = "logs/pytest-logs.txt"
+log_file_level = "INFO"
+filterwarnings = "ignore"
+
 """,
     ".gitignore": """*.venv/
 app/__pycache__/
@@ -158,20 +173,8 @@ if __name__ == "__main__":
             generate_docs_for_folder(folder)
 """,
     "requirements.txt": "",
-    "pytest.ini": """[pytest]
-testpaths =
-    tests
-addopts = -v -ra -q
-log_cli=true
-log_level=DEBUG
-log_format = %(asctime)s %(levelname)s %(message)s
-log_date_format = %Y-%m-%d %H:%M:%S
-log_file = logs/pytest-logs.txt
-log_file_level = INFO
-filterwarnings = ignore
-""",
     "tests/__init__.py": "",
-    "tests/test.py": """# you can import your modules and test them here
+    "tests/test_example.py": """# you can import your modules and test them here
 import pytest
 
 @pytest.fixture
