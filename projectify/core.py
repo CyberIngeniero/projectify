@@ -2,7 +2,6 @@ import argparse
 import importlib.metadata
 import os
 import platform
-import shutil
 import subprocess
 import sys
 
@@ -45,21 +44,18 @@ def clean_project():
     It deletes the "dist", "build" directories and any directory that ends with ".egg-info".
     """
     print(Fore.CYAN + "Limpiando archivos generados...")
-    folders_to_clean = ["dist", "build"]
+    directories = ["build", "dist", ".egg-info"]
 
-    # Eliminar carpetas específicas
-    for folder in folders_to_clean:
-        if os.path.exists(folder):
-            shutil.rmtree(folder)
-            print(Fore.GREEN + f"Directorio '{folder}' eliminado exitosamente.")
-
-    # Eliminar directorios que terminan en .egg-info
-    for item in os.listdir("."):
-        if item.endswith(".egg-info") and os.path.isdir(item):
-            shutil.rmtree(item)
-            print(Fore.GREEN + f"Directorio '{item}' eliminado exitosamente.")
-
-    print(Fore.GREEN + "Archivos limpiados exitosamente.")
+    for directory in directories:
+        if os.path.exists(directory):
+            try:
+                subprocess.run(["rm", "-rf", directory], check=True)
+                print(f"Directorio {directory} eliminado correctamente.")
+            except subprocess.CalledProcessError as e:
+                print(f"Error al eliminar el directorio {directory}: {e}")
+        else:
+            print(f"El directorio {directory} no existe.")
+    print("Limpieza completa.")
 
 
 def install_dependencies():
@@ -70,6 +66,9 @@ def install_dependencies():
     print(Fore.CYAN + "Instalando dependencias...")
 
     venv_path = os.path.join(os.getcwd(), ".venv")
+    requirements_file = "requirements.txt"
+
+    # Verificar si el entorno virtual existe
     if os.path.exists(venv_path):
         print(
             Fore.GREEN
@@ -80,11 +79,24 @@ def install_dependencies():
             "bin",
             "uv" if platform.system() != "Windows" else "Scripts\\uv.exe",
         )
+
         if os.path.exists(uv_executable):
-            subprocess.check_call(
-                [uv_executable, "pip", "install", "-r", "requirements.txt"]
-            )
-            print(Fore.GREEN + "Dependencias instaladas exitosamente.")
+            if os.path.exists(requirements_file):
+                try:
+                    subprocess.check_call(
+                        [uv_executable, "pip", "install", "-r", requirements_file]
+                    )
+                    subprocess.check_call([uv_executable, "pip", "install", "ruff"])
+                    print(Fore.GREEN + "Dependencias instaladas exitosamente.")
+                except subprocess.CalledProcessError as e:
+                    print(f"Error al instalar dependencias: {e}")
+                    sys.exit(1)
+            else:
+                print(
+                    Fore.RED
+                    + "No se encontró el archivo requirements.txt. Por favor, asegúrese de que exista."
+                )
+                sys.exit(1)
         else:
             print(
                 Fore.RED + "No se encontró el ejecutable de 'uv' en el entorno virtual."
@@ -119,6 +131,49 @@ def run_tests():
             )
     else:
         print(Fore.RED + "No se encontró la carpeta 'tests'.")
+
+
+def run_linter():
+    venv_path = ".venv"
+    if not os.path.exists(venv_path):
+        print(
+            "No se encontró un entorno virtual. Por favor, cree uno antes de ejecutar el linter."
+        )
+        sys.exit(1)
+
+    try:
+        subprocess.run([os.path.join(venv_path, "bin", "ruff"), "."], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error al ejecutar el linter: {e}")
+        sys.exit(1)
+    print("Linter ejecutado correctamente.")
+
+
+def format_code():
+    venv_path = ".venv"
+    if not os.path.exists(venv_path):
+        print(
+            "No se encontró un entorno virtual. Por favor, cree uno antes de formatear el código."
+        )
+        sys.exit(1)
+
+    try:
+        subprocess.run(
+            [os.path.join(venv_path, "bin", "ruff"), "check", "--fix", "."], check=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error al formatear el código: {e}")
+        sys.exit(1)
+    print("Código formateado correctamente.")
+
+
+def generate_docs():
+    try:
+        subprocess.run(["mkdocs", "build"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error al generar la documentación: {e}")
+        sys.exit(1)
+    print("Documentación generada correctamente.")
 
 
 def Init():
@@ -190,25 +245,38 @@ def main():
 
     subparsers = parser.add_subparsers(dest="command")
     subparsers.add_parser("init", help="Crear un nuevo proyecto")
+    subparsers.add_parser("i", help="Alias para crear un nuevo proyecto")
     subparsers.add_parser("clean", help="Limpiar archivos generados")
+    subparsers.add_parser("c", help="Alias para limpiar archivos generados")
     subparsers.add_parser("install-dependencies", help="Instalar dependencias")
+    subparsers.add_parser("id", help="Alias para instalar dependencias")
     subparsers.add_parser("run-tests", help="Ejecutar pruebas")
+    subparsers.add_parser("rt", help="Alias para ejecutar pruebas")
     subparsers.add_parser("lint", help="Ejecutar linter")
+    subparsers.add_parser("l", help="Alias para ejecutar linter")
     subparsers.add_parser("format", help="Formatear código")
+    subparsers.add_parser("f", help="Alias para formatear código")
     subparsers.add_parser("generate-docs", help="Generar documentación")
+    subparsers.add_parser("g", help="Alias para generar documentación")
 
     args = parser.parse_args()
 
-    if args.command == "init":
-        Init()
-    elif args.command == "clean":
+    if args.command in ["init", "i"]:
+        setup_project()
+    elif args.command in ["clean", "c"]:
         clean_project()
-
-    elif args.command == "install-dependencies":
+    elif args.command in ["install-dependencies", "id"]:
         install_dependencies()
-
-    elif args.command == "run-tests":
+    elif args.command in ["run-tests", "rt"]:
         run_tests()
+    elif args.command in ["lint", "l"]:
+        run_linter()
+    elif args.command in ["format", "f"]:
+        format_code()
+    elif args.command in ["generate-docs", "g"]:
+        generate_docs()
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
