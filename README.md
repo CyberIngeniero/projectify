@@ -2,24 +2,26 @@
 
 Proyectify is a command-line tool that generates and sets up a Python project structure with all necessary configurations, including a virtual environment, IDE setup, Git integration, and documentation generation with MkDocs.
 
-## Features
+## ✅ Features
 
 - Creation of the basic project structure with predefined folders.
-- Configuration of base files such as pyproject.toml, .gitignore, Makefile, etc.
+- Creation of virtual environments with the specified Python version using  `uv` .
+- Configuration of base files such as pyproject.toml, .gitignore, Makefile, Dockerfile, etc.
 - Creation of a virtual environment with the specified Python version.
 - Initialization of a Git repository.
-- Installation of necessary packages such as ruff, pre-commit, mkdocs, mkdocstrings.
+- Installation of necessary packages such as ruff, pre-commit, mkdocs, mkdocstrings, pytest.
 - Setup for popular IDEs (VScode, Pycharm).
-- Automatic documentation generation for modules.
+- Automatic documentation generation for modules using  `mkdocs`  and  `mkdocstrings`.
+- Automatic configuration for Testing with Pytest.
 
-## Prerequisites
+## 📦 Requirements
 
 - Python 3.8 or higher.
 - In macOS, DevsTools must be installed.
 
-## Usage
+## 🚀 Quick Start
 
-### Running the package
+### ☁️ Instalation
 
 To run the package and set up your project, use the following command:
 
@@ -27,13 +29,29 @@ To run the package and set up your project, use the following command:
 pip install projectify
 ```
 
-### Interactive Options
+### </> Command-Line Options
 
 During script execution, you will be prompted for the following options:
 
 - **Project Name**: Enter the name of your new project.
 - **IDE Selection**: Select your favorite IDE (VScode, Pycharm, Other).
 - **Python Version**: Select the Python version to use. If only one version is installed, it will be used automatically.
+
+#### Options
+
+| ARGUMENT                         | DESCRIPTION                                                                                             |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| -i, --init                       | Create a new project                                                                                    |
+| -c, --clean                      | Clean generated files and directories                                                                   |
+| -id, --install-dependencies      | Install dependencies from `requirements.txt`                                                            |
+| -t, --run-tests                  | Run tests in the `tests` directory                                                                      |
+| -l, --lint                       | Run linter (Ruff) on the project                                                                        |
+| -f, --format                     | Format the code using Ruff                                                                              |
+| -g, --generate-docs              | Generate documentation using MkDocs                                                                     |
+| -h, --help                       | Show this help page and exit                                                                            |
+| -v, --version                    | Show the current version of Projectify                                                                  |
+
+**Warning:** _In future versions some commands may change_
 
 ## Dependency Installation
 
@@ -63,7 +81,7 @@ choco install make
 
 In Linux and macOS, `make` is installed by default.
 
-## Project Structure
+### 📂 Project Structure
 
 The package will generate the following folder structure:
 
@@ -103,7 +121,9 @@ The package will generate the following folder structure:
 └── README.md
 ```
 
-## Documentation Generation
+### 📝 Documentation Generation
+
+The package generates documentation for each module using MkDocs and the MkDocstrings plugin. The documentation is generated in the `docs` folder.
 
 To generate and serve documentation with MkDocs, use the following commands:
 
@@ -117,7 +137,7 @@ To generate documentation for modules, run:
 make generate-docs
 ```
 
-## Configuration Details
+## 📚 Configuration Detail
 
 `uv` for Virtual Environments
 
@@ -201,10 +221,27 @@ if __name__ == "__main__":
 
 This script is automatically executed when running the `make generate-docs` command. (Feel free to modify it according to your needs).
 
-## Contribution
+## 🔮 Roadmap
+
+- [x] Create a basic and standar project structure.
+- [ ] Add more configuration options. (e.g. pre-commit hooks, etc.)
+- [ ] Add more IDEs to the setup options.
+- [ ] Add devcontainer configuration for VScode.
+- [ ] Add more documentation generation options. (e.g. Sphinx, etc.)
+- [ ] Add CI/CD options. (e.g. GitHub Actions, etc.)
+
+## 🐛 Known bugs
+
+- (SOLVED) The package does not work on Windows when the Python version is specified.
+- (SOLVED) The dependencies are not installed when the package is installed with pip.
+- (SOLVED) The color output is not displayed correctly in the terminal.
+
+> If you find any bugs, don't hesitate and open an issue :)
+
+## 📝 Contributing
 
 If you'd like to contribute to this project, you're welcome to submit a pull request or open an issue in the repository.
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License. For more details, please refer to the LICENSE file.
