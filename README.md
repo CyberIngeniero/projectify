@@ -240,7 +240,18 @@ This script is automatically executed when running the `make generate-docs` comm
 
 ## 📝 Contributing
 
-If you'd like to contribute to this project, you're welcome to submit a pull request or open an issue in the repository.
+If you want to contribute check the [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+
+## ☕ Buy me a coffee
+
+We have developed npkill in our free time, because we are passionate about the programming sector.
+Tomorrow we would like to dedicate ourselves to this, but first, we have a long way to go.
+
+We will continue to do things anyway, but donations are one of the many ways to support what we do.
+
+<a href="https://www.buymeacoffee.com/CyberIngeniero" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 170px !important;" ></a>
+
+### Thanks!!
 
 ## 📜 License
 
