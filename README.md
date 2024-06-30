@@ -1,4 +1,4 @@
-# 🤖📦 Proyectify: A Command-Line Tool for Quick Python Project Setup
+# 🤖📦 Pojectify!: A Command-Line Tool for Quick Python Project Setup
 
 Proyectify is a command-line tool that generates and sets up a Python project structure with all necessary configurations, including a virtual environment, IDE setup, Git integration, and documentation generation with MkDocs.
 
