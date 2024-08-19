@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "projectify"
-version = "0.1.12"
+version = "0.1.13"
 description = "A simple tool to create a Python project structure"
 readme = "README.md"
 authors = [{ name = "CyberIngeniero", email = "npinoa.ai@gmail.com" }]
