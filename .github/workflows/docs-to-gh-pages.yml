@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
+  build_mkdocs:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,10 +26,29 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements/requirements-docs.txt
 
-      - name: Build site
-        run: mkdocs build --strict
-
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
-        env:
-          GITHUB_TOKEN: ${{ secrets.PROJECTIFY_DEPLOY_DOCS }}
+
+  deploy_mkdocs:
+    needs: build_mkdocs
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
