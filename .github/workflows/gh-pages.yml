@@ -11,15 +11,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
-      - name: Install MkDocs
-        run: pip install mkdocs mkdocs-rtd-dropdown
+      - name: Install dependencies
+        run: pip install --no-deps -r requirements/requirements-docs.txt
 
-      - name: Build and deploy
-        run: mkdocs gh-deploy --force
+      - name: Build site
+        run: mkdocs build --strict
