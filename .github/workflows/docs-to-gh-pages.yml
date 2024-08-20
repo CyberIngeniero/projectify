@@ -27,4 +27,4 @@ jobs:
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
         env:
-          GITHUB_TOKEN: ${{ secrets.DOCS_PROJECTIFY }}
+          GITHUB_TOKEN: ${{ secrets.PROJECTIFY_DEPLOY_DOCS }}
