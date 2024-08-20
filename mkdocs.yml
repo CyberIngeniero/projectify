@@ -1,0 +1,20 @@
+site_name: Projectify!
+site_url: https://cyberingeniero.github.com/projectify/
+theme:
+  name: readthedocs
+  language: es
+  features:
+    - navigation.tabs
+    - navigation.expand
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Installation: install.md
+  - Commands: commands.md
+  - API Reference: api.md
+  - Templates: templates.md
+  - FAQ: faq.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
+  - Roadmap: roadmap.md
+  - License: license.md

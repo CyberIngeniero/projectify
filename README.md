@@ -251,7 +251,7 @@ We will continue to do things anyway, but donations are one of the many ways to 
 
 <a href="https://www.buymeacoffee.com/CyberIngeniero" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 170px !important;" ></a>
 
-### Thanks!!
+### Thanks! 🙏
 
 ## 📜 License
 

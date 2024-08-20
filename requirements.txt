@@ -1,0 +1,4 @@
+mkdocs
+mkdocs-rtd-dropdown
+bump2version
+twine
