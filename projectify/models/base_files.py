@@ -1,5 +1,13 @@
 base_files = {
-    "pyproject.toml": """[tool.ruff]
+    "pyproject.toml": """[project]
+name = "{ project_name }"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = "{ python_version }"
+dependencies = []
+
+[tool.ruff]
 line-length = 88
 indent-width = 4
 include = ["pyproject.toml"]
